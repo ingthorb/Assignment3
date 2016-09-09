@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assignment3.API.Models;
+using Assignment3.API.Services.Entities;
 
 namespace Assignment3.API.Services
 {
@@ -17,6 +18,7 @@ namespace Assignment3.API.Services
         StudentSSN AddStudentToCourse(int id, StudentSSN student);
 
         CoursesDTO UpdateCourse(int id, CourseUpdate coursedt);
-        AddCourse CreateCourse(AddCourse courses);
+        
+        Courses CreateCourse(AddCourse courses);
     }
 }

@@ -1,5 +1,5 @@
---temp-output:C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\obj\Debug\netcoreapp1.0\
---out:C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\bin\Debug\netcoreapp1.0\Models.dll
+--temp-output:C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\obj\Debug\netcoreapp1.0\
+--out:C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\bin\Debug\netcoreapp1.0\Models.dll
 --define:DEBUG
 --define:TRACE
 --define:NETCOREAPP1_0
@@ -86,11 +86,11 @@
 --reference:C:\Users\Ingþór\.nuget\packages\System.Threading.Timer\4.0.1\ref\netstandard1.2\System.Threading.Timer.dll
 --reference:C:\Users\Ingþór\.nuget\packages\System.Xml.ReaderWriter\4.0.11\ref\netstandard1.3\System.Xml.ReaderWriter.dll
 --reference:C:\Users\Ingþór\.nuget\packages\System.Xml.XDocument\4.0.11\ref\netstandard1.3\System.Xml.XDocument.dll
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\AddCourse.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\CourseDetailed.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\CourseDtoLite.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\coursesDTO.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\CourseUpdate.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\Library.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\StudentDTO.cs
-C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assignment3\Models\StudentSSN.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\AddCourse.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\CourseDetailed.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\CourseDtoLite.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\coursesDTO.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\CourseUpdate.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\Library.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\StudentDTO.cs
+C:\Users\Ingþór\Desktop\Háskólinn í Reykjavík\Haustönn 2016\Vefforritun 2\Assign3\Models\StudentSSN.cs

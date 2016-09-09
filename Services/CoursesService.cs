@@ -87,7 +87,6 @@ namespace Assignment3.API.Services
 
               if(course == null)
               {
-                  Console.WriteLine("GetCourseByID Exception");
                   throw new AppObjectNotFoundException();
               }
 
@@ -102,9 +101,6 @@ namespace Assignment3.API.Services
         public List<StudentDTO> GetListOfStudentsByCourseId(int id){
              Console.WriteLine("GetListOfStudentsByCourseId");
             //Only list active users not that have been deleted(SaveChanges)
-
-            //Gives StackOverFlowException
-            //var checkCourse = GetCourseByID(id);
 
             //Það að kalla í þetta fall úr GetCourseByID var að fokka upp checkinu
             //Ef við thurfum ekki að tjekka hvort þessi course se til þa er hægt ad kalla i thad
@@ -125,8 +121,7 @@ namespace Assignment3.API.Services
                  SSN = ct.SSN,
                  Name = ct.Name
              }).ToList();
-             Console.WriteLine("SSN");
-             Console.WriteLine(listOfStudents[1].SSN);
+
              return listOfStudents;
          }
 
@@ -154,13 +149,11 @@ namespace Assignment3.API.Services
              }
              else
              {
-                 Console.WriteLine("WE GO INTO UPDATE");    
+                
                  courseToUpdate.StartDate = coursedt.StartDate;
                  courseToUpdate.EndDate   = coursedt.EndDate;
                  try
                  {
-                     //Fer herna inn en vill ekki updateast
-                     Console.WriteLine("WE GO INTO Save"); 
                      _db.SaveChanges();
                  }
                  catch (System.Exception)
@@ -172,19 +165,28 @@ namespace Assignment3.API.Services
          }
  
 
-       public AddCourse CreateCourse(AddCourse course) 
+       public Courses CreateCourse(AddCourse course) 
        {
-          // Fæ error á að ekkert ID sé??
-          /* var newCourse = new Entities.Course {
-               CourseID = course.CourseID,
+           var newCourse = new Entities.Courses {
+               TemplateID = course.TemplateID,
                StartDate = course.StartDate,
                EndDate = course.EndDate,
                Semester = course.Semester,
                MaxStudents = course.MaxStudents
            };
+            Console.WriteLine("WE GO HERE, add");
             _db.Courses.Add(newCourse);
-           return course;*/
-           return course;
+            try
+            {
+                Console.WriteLine("WE GO HERE, SAVE CHANGES");
+                _db.SaveChanges();
+            }
+            catch (System.Exception)
+            {
+                throw new FailedToSaveToDatabaseException();
+            }
+            
+           return newCourse;
        }
 
         /// <summary>
@@ -195,7 +197,7 @@ namespace Assignment3.API.Services
         /// <returns>boolean value if we can not add the student to the couse</returns>
         public StudentSSN AddStudentToCourse(int id, StudentSSN student){
             
-            Console.WriteLine("AddStudentToCourse");
+           // Console.WriteLine("AddStudentToCourse");
             var isStudentInCourse  = (from x in _db.StudentsInCourses
             join ct in _db.Students on x.SSN equals ct.SSN 
             where x.CourseID == id
@@ -206,27 +208,26 @@ namespace Assignment3.API.Services
                  Name = ct.Name
              }).SingleOrDefault();
 
-
-            Console.WriteLine("AddStudentToCourse CHECK");
-            if(isStudentInCourse == null)
+            //This was incorrect, was == should be !=
+            if(isStudentInCourse != null)
              {
-                 Console.WriteLine("AddStudentToCourse INSIDECHECK");
-                 Console.WriteLine(isStudentInCourse.SSN);
+                // Console.WriteLine("AddStudentToCourse INSIDECHECK");
+                 //Console.WriteLine(isStudentInCourse.SSN);
                  throw new StudentIsInCourseException();
              }
-            // var studentExists = (from x in _db.Students
-            // where student.SSN == (long)x.SSN
-            // select new StudentSSN{
-            //       SSN = x.SSN
-            // }).SingleOrDefault();
 
-            /* if(studentExists == null)
+             var studentExists = (from x in _db.Students
+             where student.SSN == x.SSN
+             select new StudentSSN{
+                   SSN = x.SSN
+             }).SingleOrDefault();
+
+             if(studentExists == null)
              {
                  throw new StudentNonExistException();
               }   
-                 */
 
-                 Console.WriteLine("AddStudentToCourse STUDENTSINCOURSE");
+                // Console.WriteLine("AddStudentToCourse STUDENTSINCOURSE");
             var studentInCourse = new Entities.StudentsInCourse {
                     CourseID = id,
                     SSN =student.SSN
@@ -251,7 +252,7 @@ namespace Assignment3.API.Services
          /// <param name="id">The id of the couse we want to delete</param>
          /// <returns>Boolean value if we could not remove from database</returns>
          public CoursesDTO DeleteCourse(int id){
-             Console.WriteLine("DeleteCourse");
+            // Console.WriteLine("DeleteCourse");
             var corseToDelete = 
             (from x in _db.Courses
              where x.ID == id

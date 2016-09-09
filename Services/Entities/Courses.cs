@@ -2,7 +2,7 @@ using System;
 
 namespace Assignment3.API.Services.Entities
 {
-    public class Course{
+    public class Courses{
 
         /// <summary>
         /// Database generated ID of the course

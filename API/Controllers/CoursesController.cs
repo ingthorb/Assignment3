@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Assignment3.API.Models;
 using Assignment3.API.Services;
+using Assignment3.API.Services.Entities;
 
 namespace Assignment3.API.Controllers {
     [Route("api/courses")]
@@ -38,7 +39,7 @@ namespace Assignment3.API.Controllers {
         /// <param name="id">The parameter of the couse we want to return</param>
         /// <returns>Returns detailed course object</returns>
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}",Name="GetCourseByID")]
          public IActionResult GetCourseByID(int id){
              Console.WriteLine("GetCourseByID");
              CourseDetailed course =  new CourseDetailed();
@@ -113,10 +114,10 @@ namespace Assignment3.API.Controllers {
          }
 
         [HttpPost]
-         [Route("{id:int}", Name="AddCourse")]
+       // [Route("api/courses"),Name="AddCourse")]
         public IActionResult CreateCourse([FromBody] AddCourse courses) 
         {
-           AddCourse course = new AddCourse(); 
+           Courses course = new Courses(); 
            
            if(ModelState.IsValid)
            {
@@ -126,9 +127,8 @@ namespace Assignment3.API.Controllers {
            {
                return BadRequest();
            }
-           //courses.Add(course);
-           //var location = Url.Link("GetCourse", new { id = course.ID });  
-           return Ok();//Created(location,course);
+           var location = Url.Link("GetCourseByID", new { id =  course.ID });  
+           return Created(location,course);
         }
 
         /// <summary>
@@ -161,12 +161,11 @@ namespace Assignment3.API.Controllers {
                     //return InternalServerError(ex);
                     return BadRequest();
                 }
-                /*
-                catch (StudentNonExistException see)
+                catch (StudentNonExistException )
                 {
                     return BadRequest();
                 }
-                */
+                
                 
             }
             else

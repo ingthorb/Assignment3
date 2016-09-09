@@ -10,7 +10,7 @@ namespace Assignment3.API.Services
     public class AppDataContext : DbContext
     {
 
-        public DbSet<Course> Courses {get;set;}
+        public DbSet<Courses> Courses {get;set;}
         public DbSet<CourseTemplate> CourseTemplate { get; set; }
         public DbSet<StudentsInCourse> StudentsInCourses { get; set; }
         public DbSet<Students> Students {get; set;}
