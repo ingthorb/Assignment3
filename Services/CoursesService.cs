@@ -198,6 +198,11 @@ namespace Assignment3.API.Services
         public StudentSSN AddStudentToCourse(int id, StudentSSN student){
             
            // Console.WriteLine("AddStudentToCourse");
+           
+           //Checka hvort Maxstudents hefur verið nað fyrir course
+           //Ef svo er setja a waiting list
+           //Utfæra waitinglist, bua til Model sem inniheldur CourseID og SSN á student
+           //Bua til svo lista af af þvi model
             var isStudentInCourse  = (from x in _db.StudentsInCourses
             join ct in _db.Students on x.SSN equals ct.SSN 
             where x.CourseID == id

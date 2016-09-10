@@ -127,6 +127,7 @@ namespace Assignment3.API.Controllers {
            {
                return BadRequest();
            }
+           //Skilar location rett, en get ekki nad i course
            var location = Url.Link("GetCourseByID", new { id =  course.ID });  
            return Created(location,course);
         }
@@ -153,6 +154,9 @@ namespace Assignment3.API.Controllers {
                 }
                 catch (StudentIsInCourseException )
                 {
+
+                    //A samt ad skila 413 precondition failed
+                    //return PreconditionFailed();
                     return BadRequest();
                 }
                 catch (FailedToSaveToDatabaseException )
@@ -170,10 +174,9 @@ namespace Assignment3.API.Controllers {
             }
             else
             {
-                Console.WriteLine("INVALID");
                 return BadRequest();
             }
-            Console.WriteLine("ISVALID");
+
             var location = Url.Link("AddStudentToCourse", new { id = _id });  
             return Created(location,Student);
        }
