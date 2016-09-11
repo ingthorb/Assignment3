@@ -126,6 +126,7 @@ C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Entities\S
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Entities\WaitingList.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Exceptions\AppObjectNotFoundException.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Exceptions\FailedToSaveToDatabaseException.cs
+C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Exceptions\MaxNumberOfStudentsException.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Exceptions\MissingPropertyException.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Exceptions\StudentIsInCourseException.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Services\Exceptions\StudentNonExistException.cs

@@ -2,8 +2,9 @@ using System;
 
 namespace Assignment3.API.Models
 {
-    public class AddWaitingList
+    public class WaitingListDTO
     {
+
         public int CourseID { get; set; }
 
         /// <summary>

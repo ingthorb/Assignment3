@@ -169,9 +169,13 @@ namespace Assignment3.API.Controllers {
                 }
                 catch (StudentIsInCourseException )
                 {
-
                     return StatusCode(412);
                 }
+                catch (MaxNumberOfStudentsException)
+                {
+                    return StatusCode(412);
+                }
+
                 catch (FailedToSaveToDatabaseException )
                 {
                     //Virkar ekki
@@ -180,12 +184,13 @@ namespace Assignment3.API.Controllers {
                 }
                 catch (StudentNonExistException )
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
                 catch (AppObjectNotFoundException)
                 {
                     return NotFound();
                 }
+
                 
             }
             else
@@ -211,6 +216,10 @@ namespace Assignment3.API.Controllers {
                 {
                     return NotFound();
                 }
+                catch(StudentNonExistException)
+                {
+                    return NotFound();
+                }
                 catch(StudentIsInCourseException)
                 {
                     return StatusCode(412);
@@ -219,14 +228,15 @@ namespace Assignment3.API.Controllers {
                 {
                     return StatusCode(412);
                 }
+                
             }
             else
             {
                 return BadRequest();
             }
             //ætti ekki að þurfa nýtt id fyrst við erum alltaf með sama?
-            var location = Url.Link("AddToWaitingList", new {id = id});
-            return Created(location,addStudent);
+           // var location = Url.Link("AddToWaitingList", new {id = id});
+            return Ok();
         }
         [HttpDelete]
         [Route("{id:int}/students/{ssn:long}")]

@@ -196,10 +196,13 @@ namespace Assignment3.API.Services
            List<StudentDTO> listofStudents = GetListOfStudentsByCourseId(id);
            var numberOfStudents = listofStudents.Count;
            var course = GetCourseByID(id);
+
            if(numberOfStudents == course.MaxStudents )
            {
                //Course is full
+               //add to waitinglist
                AddToWaitingList(id, student);
+               throw new MaxNumberOfStudentsException();
            }
            
             var isStudentInCourse = listofStudents.Exists(x =>  x.SSN == student.SSN);
@@ -236,6 +239,21 @@ namespace Assignment3.API.Services
             {
               student2.Active = 1;
             }
+
+                var studentonwaitinglist = (from x in _db.WaitingList
+                where x.SSN == student.SSN
+                where x.CourseID == id
+                select x).SingleOrDefault();
+
+            if(studentonwaitinglist != null)
+            {
+                var deleteofwaitinglist = new Entities.WaitingList
+                {
+                    CourseID = id,
+                    SSN = student.SSN
+                };
+            }
+
             try {
                 _db.SaveChanges();
             } catch (Exception e) {
@@ -249,13 +267,23 @@ namespace Assignment3.API.Services
 
          public StudentSSN AddToWaitingList(int id,StudentSSN student)
         {
-            var course = GetCourseByID(id);
+             var course = GetCourseByID(id);
 
-            var newStudent = new Entities.WaitingList{
-            CourseID = id,
-            SSN = student.SSN
-            };            
+             var newStudent = new Entities.WaitingList{
+                CourseID = id,
+                SSN = student.SSN
+                };            
+             var studentExists = (from x in _db.Students
+             where student.SSN == x.SSN
+             select new StudentSSN{
+                   SSN = x.SSN
+             }).SingleOrDefault();
 
+             if(studentExists == null)
+             {
+                 Console.WriteLine("Student exception");
+                 throw new StudentNonExistException();
+            }   
             List<StudentDTO> students = GetWaitingList(id);
             //skilar boolean
             var studentinlist = students.Exists(x => x.SSN == student.SSN);
@@ -282,8 +310,9 @@ namespace Assignment3.API.Services
             return student;
 
         }
-
+        //Virkar ekki
           public StudentSSN DeleteStudent(int id, long SSN){
+
               var course = GetCourseByID(id);
               StudentSSN studentdelete = new StudentSSN();
               studentdelete.SSN = SSN;
@@ -311,12 +340,11 @@ namespace Assignment3.API.Services
               if(someoneOnWaitingList != null)
               {
                 StudentSSN addStudent = new StudentSSN();
-                
+
                 addStudent.SSN = someoneOnWaitingList.SSN;
                 //remove from the waitinglist
                 _db.WaitingList.Remove(someoneOnWaitingList);
-                //add to the course
-                AddStudentToCourse(id,addStudent);
+
               }
               try {
                 _db.SaveChanges();

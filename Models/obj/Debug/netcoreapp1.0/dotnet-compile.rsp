@@ -87,7 +87,6 @@
 --reference:C:\Users\Ingthorb\.nuget\packages\System.Xml.ReaderWriter\4.0.11\ref\netstandard1.3\System.Xml.ReaderWriter.dll
 --reference:C:\Users\Ingthorb\.nuget\packages\System.Xml.XDocument\4.0.11\ref\netstandard1.3\System.Xml.XDocument.dll
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\AddCourse.cs
-C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\AddWaitingList.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\CourseDetailed.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\CourseDtoLite.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\coursesDTO.cs
@@ -95,3 +94,4 @@ C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\CourseUpdate
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\StudentDTO.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\StudentsInCourses.cs
 C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\StudentSSN.cs
+C:\Users\Ingthorb\Desktop\HR\Haustönn 2016\Veff\Assignment3\Models\WaitingListDTO.cs
