@@ -311,7 +311,9 @@ namespace Assignment3.API.Services
                 StudentSSN addStudent = new StudentSSN();
                 
                 addStudent.SSN = someoneOnWaitingList.SSN;
-                
+                //remove from the waitinglist
+                _db.WaitingList.Remove(someoneOnWaitingList);
+                //add to the course
                 AddStudentToCourse(id,addStudent);
               }
               try {
