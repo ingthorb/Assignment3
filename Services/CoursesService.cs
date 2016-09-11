@@ -49,8 +49,6 @@ namespace Assignment3.API.Services
            return result;
          }  
 
-
-
         /// <summary>
         /// Returns a detailed information about a couse 
         /// </summary>
@@ -58,6 +56,15 @@ namespace Assignment3.API.Services
         /// <returns>Returns CourseDetailed</returns>
        public CourseDetailed GetCourseByID(int id){  
          Console.WriteLine("GetCourseByID");
+
+             var listOfStudents2 = (from x in _db.StudentsInCourses
+            join ct in _db.Students on x.SSN equals ct.SSN 
+            where x.CourseID == id
+            where x.Active == 1
+            select new StudentDTO{
+                 Name = ct.Name,
+                 SSN = ct.SSN,
+             }).ToList(); 
              var course = (from x in _db.Courses
              join ct in _db.CourseTemplate on x.TemplateID equals ct.TemplateID
              where x.ID == id
@@ -68,7 +75,7 @@ namespace Assignment3.API.Services
                   Semester = x.Semester,
                   StartDate  = x.StartDate,
                   EndDate = x.EndDate,
-                  listOfStudents = GetListOfStudentsByCourseId(id),
+                  listOfStudents = listOfStudents2,
                   MaxStudents = x.MaxStudents
               }).SingleOrDefault();
 
@@ -77,8 +84,6 @@ namespace Assignment3.API.Services
                       Console.WriteLine("GETCOURSE EXCEPTION");
                   throw new AppObjectNotFoundException();
               }
-
-
               return course;
          }
            /// <summary>
@@ -116,9 +121,6 @@ namespace Assignment3.API.Services
             }).ToList();
 
             return listOfStudentsInWaitingList;
-
-
-
         }
          /// <summary>
          /// Allows us to update the startdate and endate of course
@@ -168,11 +170,9 @@ namespace Assignment3.API.Services
                Semester = course.Semester,
                MaxStudents = course.MaxStudents
            };
-            Console.WriteLine("WE GO HERE, add");
             _db.Courses.Add(newCourse);
             try
             {
-                Console.WriteLine("WE GO HERE, SAVE CHANGES");
                 _db.SaveChanges();
             }
             catch (System.Exception)
@@ -201,7 +201,7 @@ namespace Assignment3.API.Services
                //Course is full
                AddToWaitingList(id, student);
            }
-
+           
             var isStudentInCourse = listofStudents.Exists(x =>  x.SSN == student.SSN);
             if(isStudentInCourse)
              {
@@ -219,20 +219,23 @@ namespace Assignment3.API.Services
                  throw new StudentNonExistException();
               }   
 
-                // Console.WriteLine("AddStudentToCourse STUDENTSINCOURSE");
-            var studentInCourse = new Entities.StudentsInCourse {
-                    CourseID = id,
-                    SSN =student.SSN
-            };
-
             var student2 = (from x in _db.StudentsInCourses
               where x.SSN == student.SSN
               select x).SingleOrDefault();
-            
-              student2.Active = 1;
-            
-            _db.StudentsInCourses.Add(studentInCourse);
 
+            if(student2 == null)
+            {
+                var studentInCourse = new Entities.StudentsInCourse {
+                    CourseID = id,
+                    SSN = student.SSN,
+                    Active = 1
+                };
+                _db.StudentsInCourses.Add(studentInCourse);
+            }
+            else
+            {
+              student2.Active = 1;
+            }
             try {
                 _db.SaveChanges();
             } catch (Exception e) {
@@ -246,8 +249,6 @@ namespace Assignment3.API.Services
 
          public StudentSSN AddToWaitingList(int id,StudentSSN student)
         {
-            //Check if already in waitinglist
-            //check if already student in course
             var course = GetCourseByID(id);
 
             var newStudent = new Entities.WaitingList{
@@ -301,7 +302,6 @@ namespace Assignment3.API.Services
               select x).SingleOrDefault();
 
               student2.Active = 0;
-              //Check if someone is on waitinglist
 
               var someoneOnWaitingList = (from x in _db.WaitingList
               where x.CourseID == id
@@ -329,7 +329,6 @@ namespace Assignment3.API.Services
               return studentdelete;
           }
          public CoursesDTO DeleteCourse(int id){
-            // Console.WriteLine("DeleteCourse");
             var corseToDelete = 
             (from x in _db.Courses
              where x.ID == id

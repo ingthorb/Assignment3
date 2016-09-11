@@ -21,6 +21,6 @@ namespace Assignment3.API.Services.Entities
         /// <returns></returns>
         public long SSN { get; set; }
 
-        public int Active {get; set; }
+        public int Active {get; set;  }
     }
 }
