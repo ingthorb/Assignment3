@@ -14,6 +14,7 @@ namespace Assignment3.API.Services
         public DbSet<CourseTemplate> CourseTemplate { get; set; }
         public DbSet<StudentsInCourse> StudentsInCourses { get; set; }
         public DbSet<Students> Students {get; set;}
+         public DbSet<WaitingList> WaitingList {get; set;}
 
         public AppDataContext(DbContextOptions<AppDataContext> options)
             : base(options)

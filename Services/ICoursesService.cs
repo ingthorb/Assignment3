@@ -13,9 +13,13 @@ namespace Assignment3.API.Services
 
         CourseDetailed GetCourseByID(int id);
 
+        List<StudentDTO> GetWaitingList(int id);
+
         CoursesDTO DeleteCourse(int id);
+        StudentSSN DeleteStudent(int id, StudentSSN student);
 
         StudentSSN AddStudentToCourse(int id, StudentSSN student);
+        StudentSSN AddToWaitingList(int id,StudentSSN student);
 
         CoursesDTO UpdateCourse(int id, CourseUpdate coursedt);
         

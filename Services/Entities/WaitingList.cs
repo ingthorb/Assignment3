@@ -1,26 +1,26 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace Assignment3.API.Services.Entities
 {
-    public class StudentsInCourse{
+    public class WaitingList
+    {
 
-        
+            
         /// <summary>
-        /// Database generated id for the student in course connection
+        /// Database generated number for the student in the WaitingList
         /// </summary>
         /// <returns></returns>
-        public int ID { get; set; }
+        [Key]
+        public int Number { get; set; }
 
-        /// <summary>
-        /// The id of the course
-        /// </summary>
-        /// <returns></returns>
         public int CourseID { get; set; }
-        
+
         /// <summary>
         /// The Students social seciurity number 
         /// </summary>
         /// <returns></returns>
         public long SSN { get; set; }
 
-        public int Active {get; set; }
     }
 }

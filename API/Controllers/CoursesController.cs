@@ -76,6 +76,21 @@ namespace Assignment3.API.Controllers {
              return Ok(students);
          }
 
+          [HttpGet]
+          [Route("{id:int}/waitinglist", Name="GetWaitingList")]
+          public IActionResult GetWaitingList(int id) {
+             List<StudentDTO> students = new List<StudentDTO>();
+             try
+             {
+                 students = _service.GetWaitingList(id);
+             }
+             catch (AppObjectNotFoundException)
+             {
+                return NotFound();
+             }
+             return Ok(students);
+         }
+
         /// <summary>
         /// Should allow the client of the API to modify the given course instance.
         /// The properties which should be mutable are StartDate and EndDate, 
@@ -142,7 +157,7 @@ namespace Assignment3.API.Controllers {
         /// </summary>
          [HttpPost]
         [Route("{id:int}/students", Name="AddStudentToCourse")]
-        public IActionResult AddStudentToCourse(int _id,[FromBody] StudentSSN Student) 
+        public IActionResult AddStudentToCourse(int id,[FromBody] StudentSSN Student) 
         {
             Console.WriteLine("AddStudentToCoursecontroller");
             StudentSSN addStudent = new StudentSSN();
@@ -150,14 +165,12 @@ namespace Assignment3.API.Controllers {
             {
                 try
                 {
-                    addStudent = _service.AddStudentToCourse(_id,Student);
+                    addStudent = _service.AddStudentToCourse(id,Student);
                 }
                 catch (StudentIsInCourseException )
                 {
 
-                    //A samt ad skila 413 precondition failed
-                    //return PreconditionFailed();
-                    return BadRequest();
+                    return StatusCode(412);
                 }
                 catch (FailedToSaveToDatabaseException )
                 {
@@ -169,7 +182,10 @@ namespace Assignment3.API.Controllers {
                 {
                     return BadRequest();
                 }
-                
+                catch (AppObjectNotFoundException)
+                {
+                    return NotFound();
+                }
                 
             }
             else
@@ -177,9 +193,41 @@ namespace Assignment3.API.Controllers {
                 return BadRequest();
             }
 
-            var location = Url.Link("AddStudentToCourse", new { id = _id });  
+            var location = Url.Link("AddStudentToCourse", new { id = id });  
             return Created(location,Student);
        }
+        [HttpPost]
+        [Route("{id:int}/waitinglist", Name="AddToWaitingList")]
+        public IActionResult AddToWaitingList(int id,[FromBody] StudentSSN Student) 
+        {
+            StudentSSN addStudent = new StudentSSN();
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                    addStudent = _service.AddToWaitingList(id,Student);
+                }
+                catch (AppObjectNotFoundException )
+                {
+                    return NotFound();
+                }
+                catch(StudentIsInCourseException)
+                {
+                    return StatusCode(412);
+                }
+                catch(StudentOnWaitingListException)
+                {
+                    return StatusCode(412);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+            //ætti ekki að þurfa nýtt id fyrst við erum alltaf með sama?
+            var location = Url.Link("AddToWaitingList", new {id = id});
+            return Created(location,addStudent);
+        }
 
         /// <summary>
         /// Removes the course by given id

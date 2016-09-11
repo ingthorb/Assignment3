@@ -47,5 +47,7 @@ namespace Assignment3.API.Models
         /// List of Student in this course 
         /// </summary>
         public List<StudentDTO> listOfStudents { get;set;}
+        
+        public int MaxStudents {get; set;}
     }
 }

@@ -9,17 +9,13 @@ namespace Assignment3.API.Models
     {
 
       /// <summary>
-      /// The id of the stuedent 
+      /// The stuedents name
       /// </summary>
-      public int ID {get;set;}
+      public string Name {get; set;}
       /// <summary>
       /// The students social security number
       /// </summary>
       public long SSN {get;set;}
 
-      /// <summary>
-      /// The stuedents name
-      /// </summary>
-      public string Name {get; set;}
     }
 }

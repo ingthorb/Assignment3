@@ -5,7 +5,20 @@ Changed the CourseID in StudentsInCourses which was Text in the database but Int
 
 We implemented the IstheStudentinthecourse wrong, changed it.
 
-We can add a course, but it won't save to the database and can't get it after.
+We can add a course.
 
+Added waitinglist
+
+Changed StudentDTO we shouldn't be returning the id.
+
+ADDstudentlist _id wasn't doing anything?
 Do we need to change the Date format?
 https://en.wikipedia.org/wiki/ISO_8601
+
+Have a exception for everything, for example in AddTowaitinglist there are 2
+exceptions returning the same status code. But it helps debugging later on.
+
+Added students in Db how the db should be.
+
+Added DeleteStudent
+Added waitinglist, get and add.
