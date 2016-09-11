@@ -196,7 +196,6 @@ namespace Assignment3.API.Services
            List<StudentDTO> listofStudents = GetListOfStudentsByCourseId(id);
            var numberOfStudents = listofStudents.Count;
            var course = GetCourseByID(id);
-
            if(numberOfStudents == course.MaxStudents )
            {
                //Course is full
