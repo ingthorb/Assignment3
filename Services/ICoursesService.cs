@@ -16,7 +16,7 @@ namespace Assignment3.API.Services
         List<StudentDTO> GetWaitingList(int id);
 
         CoursesDTO DeleteCourse(int id);
-        StudentSSN DeleteStudent(int id, StudentSSN student);
+        StudentSSN DeleteStudent(int id, long SSN);
 
         StudentSSN AddStudentToCourse(int id, StudentSSN student);
         StudentSSN AddToWaitingList(int id,StudentSSN student);

@@ -228,6 +228,26 @@ namespace Assignment3.API.Controllers {
             var location = Url.Link("AddToWaitingList", new {id = id});
             return Created(location,addStudent);
         }
+        [HttpDelete]
+        [Route("{id:int}/students/{ssn:long}")]
+        public IActionResult DeleteCourse(int id, long SSN) {
+            StudentSSN studentdelete = new StudentSSN();
+            try
+            {
+                studentdelete = _service.DeleteStudent(id, SSN);
+            }
+            catch (AppObjectNotFoundException )
+            {
+                return NotFound();
+            }
+            catch(FailedToSaveToDatabaseException )
+            {
+                //Virkar ekki
+                //return InternalServerError(ex);
+                return BadRequest();
+            }
+            return NoContent();
+        }
 
         /// <summary>
         /// Removes the course by given id

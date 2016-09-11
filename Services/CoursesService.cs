@@ -159,7 +159,6 @@ namespace Assignment3.API.Services
              return courseToUpdate;
          }
  
-
        public Courses CreateCourse(AddCourse course) 
        {
            var newCourse = new Entities.Courses {
@@ -283,20 +282,22 @@ namespace Assignment3.API.Services
 
         }
 
-          public StudentSSN DeleteStudent(int id, StudentSSN student){
+          public StudentSSN DeleteStudent(int id, long SSN){
               var course = GetCourseByID(id);
+              StudentSSN studentdelete = new StudentSSN();
+              studentdelete.SSN = SSN;
 
               var listStudents = course.listOfStudents;
-              var studentinCourse = listStudents.Exists(x => x.SSN == student.SSN);
+              var studentinCourse = listStudents.Exists(x => x.SSN == SSN);
               if(studentinCourse == false)
               {
                   throw new AppObjectNotFoundException();
               }
               //else we find and delete
-              listStudents.RemoveAll(x => x.SSN == student.SSN);
+              listStudents.RemoveAll(x => x.SSN == SSN);
 
               var student2 = (from x in _db.StudentsInCourses
-              where x.SSN == student.SSN
+              where x.SSN == SSN
               select x).SingleOrDefault();
 
               student2.Active = 0;
@@ -325,7 +326,7 @@ namespace Assignment3.API.Services
                 throw new FailedToSaveToDatabaseException();
             }
 
-              return student;
+              return studentdelete;
           }
          public CoursesDTO DeleteCourse(int id){
             // Console.WriteLine("DeleteCourse");
