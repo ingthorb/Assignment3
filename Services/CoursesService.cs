@@ -95,6 +95,7 @@ namespace Assignment3.API.Services
             var listOfStudents = (from x in _db.StudentsInCourses
             join ct in _db.Students on x.SSN equals ct.SSN 
             where x.CourseID == id
+            where x.Active == 1
             select new StudentDTO{
                  Name = ct.Name,
                  SSN = ct.SSN,
