@@ -279,7 +279,6 @@ namespace Assignment3.API.Services
                 throw new FailedToSaveToDatabaseException();
             }
 
-            Console.WriteLine("WE RETURN STUDENT");
             return student;
         }
 
@@ -370,12 +369,17 @@ namespace Assignment3.API.Services
 
               if(someoneOnWaitingList != null)
               {
-                StudentSSN addStudent = new StudentSSN();
+                 var addStudent = new Entities.StudentsInCourse {
+                    CourseID = id,
+                    SSN = someoneOnWaitingList.SSN,
+                    Active = 1
+                };
 
-                addStudent.SSN = someoneOnWaitingList.SSN;
-                //remove from the waitinglist
+                //Remove from the waitinglist
                 _db.WaitingList.Remove(someoneOnWaitingList);
 
+                //Add the student from waiting list to the course
+                _db.StudentsInCourses.Add(addStudent);
               }
               try {
                 _db.SaveChanges();
@@ -384,7 +388,6 @@ namespace Assignment3.API.Services
                 Console.WriteLine(e);
                 throw new FailedToSaveToDatabaseException();
             }
-
               return studentdelete;
           }
 
