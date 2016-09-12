@@ -17,8 +17,7 @@ namespace Assignment3.API.Controllers {
             _service = service;
         }
 
-
-          /// <summary>
+         /// <summary>
          /// Gets couse by semester.
          /// If no semester is provided in the query (i.e. /api/courses), the current semester should be used
          /// </summary>
@@ -31,7 +30,6 @@ namespace Assignment3.API.Controllers {
          {
            return Ok(_service.GetCoursesBySemester(semester));  
          }
-
 
         /// <summary>
         /// The funtion returns information about one course with spesific id

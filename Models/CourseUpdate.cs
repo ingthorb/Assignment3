@@ -23,6 +23,7 @@ namespace Assignment3.API.Models
          /// <summary>
         /// Max number of students in course
         /// </summary>
+        [Required]
         public int MaxStudents {get; set;}
     }
 }
