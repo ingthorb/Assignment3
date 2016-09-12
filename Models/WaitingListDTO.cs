@@ -5,6 +5,10 @@ namespace Assignment3.API.Models
     public class WaitingListDTO
     {
 
+        /// <summary>
+        /// The id of the course
+        /// </summary>
+        /// <returns></returns>
         public int CourseID { get; set; }
 
         /// <summary>

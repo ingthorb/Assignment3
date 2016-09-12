@@ -54,7 +54,7 @@ namespace Assignment3.API.Controllers {
             return Ok(course);
          }
  
-             /// <summary>
+         /// <summary>
          /// Should get the list of students by course id 
          /// </summary>
          /// <param name=""{id:int}/students"">the id of the cours we want to get student list from</param>
@@ -76,19 +76,25 @@ namespace Assignment3.API.Controllers {
              return Ok(students);
          }
 
-          [HttpGet]
-          [Route("{id:int}/waitinglist", Name="GetWaitingList")]
-          public IActionResult GetWaitingList(int id) {
-             List<StudentDTO> students = new List<StudentDTO>();
-             try
-             {
-                 students = _service.GetWaitingList(id);
-             }
-             catch (AppObjectNotFoundException)
-             {
-                return NotFound();
-             }
-             return Ok(students);
+        /// <summary>
+        /// Waiting list for courses
+        /// </summary>
+        /// <param name=""{id:int}/waitinglist""></param>
+        /// <param name="id">The id of the course that we want to get the waiting list for</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id:int}/waitinglist", Name="GetWaitingList")]
+        public IActionResult GetWaitingList(int id) {
+            List<StudentDTO> students = new List<StudentDTO>();
+            try
+            {
+                students = _service.GetWaitingList(id);
+            }
+            catch (AppObjectNotFoundException)
+            {
+            return NotFound();
+            }
+            return Ok(students);
          }
 
         /// <summary>
@@ -190,8 +196,6 @@ namespace Assignment3.API.Controllers {
                 {
                     return NotFound();
                 }
-
-                
             }
             else
             {
@@ -228,7 +232,6 @@ namespace Assignment3.API.Controllers {
                 {
                     return StatusCode(412);
                 }
-                
             }
             else
             {
@@ -238,6 +241,13 @@ namespace Assignment3.API.Controllers {
            // var location = Url.Link("AddToWaitingList", new {id = id});
             return Ok();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="SSN"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("{id:int}/students/{ssn:long}")]
         public IActionResult DeleteCourse(int id, long SSN) {

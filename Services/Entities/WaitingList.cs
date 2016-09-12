@@ -14,6 +14,9 @@ namespace Assignment3.API.Services.Entities
         [Key]
         public int Number { get; set; }
 
+        /// <summary>
+        /// The id of the Course
+        /// </summary>
         public int CourseID { get; set; }
 
         /// <summary>

@@ -36,6 +36,9 @@ namespace Assignment3.API.Models
        /// </summary>
        public string Semester {get; set;}
 
+       /// <summary>
+       /// 
+       /// </summary>
        public int MyProperty { get; set; }
 
     }

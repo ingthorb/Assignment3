@@ -25,13 +25,16 @@ namespace Assignment3.API.Services.Entities
         /// </summary>
         public string EndDate { get; set; }
         
-          /// <summary>
+        /// <summary>
         /// Example "20151" -> spring 2015,
         /// "20152" -> summer 2015,
         /// "20153" -> fall 2015).
         /// </summary>
         public string Semester { get; set; }
 
+        /// <summary>
+        /// Maximum number of students in course
+        /// </summary>
         public int MaxStudents {get; set;}
     }
 }
