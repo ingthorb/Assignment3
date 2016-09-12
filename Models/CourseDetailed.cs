@@ -51,6 +51,6 @@ namespace Assignment3.API.Models
         /// <summary>
         /// Max number of students in course
         /// </summary>
-        public int MaxStudents {get; set;}
+        public int? MaxStudents {get; set;}
     }
 }

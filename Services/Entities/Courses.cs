@@ -35,6 +35,6 @@ namespace Assignment3.API.Services.Entities
         /// <summary>
         /// Maximum number of students in course
         /// </summary>
-        public int MaxStudents {get; set;}
+        public int? MaxStudents {get; set;}
     }
 }

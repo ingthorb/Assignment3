@@ -43,8 +43,6 @@ namespace Assignment3.API.Models
         /// </summary>
         /// <returns></returns>
         [Required]
-        public int MaxStudents { get; set; }
-
-
+        public int?  MaxStudents { get; set; }
     }
 }
