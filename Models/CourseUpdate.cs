@@ -19,5 +19,10 @@ namespace Assignment3.API.Models
         /// </summary>
         [Required]
         public string EndDate { get; set; }
+
+         /// <summary>
+        /// Max number of students in course
+        /// </summary>
+        public int MaxStudents {get; set;}
     }
 }

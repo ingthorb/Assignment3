@@ -36,10 +36,9 @@ namespace Assignment3.API.Models
        /// </summary>
        public string Semester {get; set;}
 
-       /// <summary>
-       /// 
-       /// </summary>
-       public int MyProperty { get; set; }
-
+        /// <summary>
+        /// Max number of students in course
+        /// </summary>
+        public int MaxStudents {get; set;}
     }
 }

@@ -86,7 +86,8 @@ namespace Assignment3.API.Services
               }
               return course;
          }
-           /// <summary>
+
+        /// <summary>
         /// Function that returns a list of all students in a spesific course
         /// </summary>
         /// <param name="id">The id of the couse</param>
@@ -108,7 +109,11 @@ namespace Assignment3.API.Services
              return listOfStudents;
          }
 
-         ///
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List<StudentDTO> GetWaitingList(int id)
         {
             var course = GetCourseByID(id);
@@ -130,25 +135,21 @@ namespace Assignment3.API.Services
          /// <returns>boolean value if we could not update couse</returns>
          public CoursesDTO UpdateCourse(int id,CourseUpdate coursedt)
          {
+
              var courseToUpdate = (from x in _db.Courses
              where x.ID == id
-             select new CoursesDTO{
-                 ID = x.ID,
-                 TemplateID = x.TemplateID,
-                 Semester = x.Semester,
-                 StartDate = x.StartDate,
-                 EndDate = x.EndDate
-             }).SingleOrDefault();
+             select x).SingleOrDefault();
              
              if(courseToUpdate == null)
              {
                  throw new AppObjectNotFoundException();
              }
              else
-             {
-                
+             {  
                  courseToUpdate.StartDate = coursedt.StartDate;
                  courseToUpdate.EndDate   = coursedt.EndDate;
+                 courseToUpdate.MaxStudents = coursedt.MaxStudents;
+                 
                  try
                  {
                      _db.SaveChanges();
@@ -158,9 +159,26 @@ namespace Assignment3.API.Services
                     throw new FailedToSaveToDatabaseException();
                  }
              }
-             return courseToUpdate;
+
+            var courseToReturn = (from x in _db.Courses
+            where x.ID == id
+            select  new CoursesDTO{
+                 ID = x.ID,
+                 TemplateID = x.TemplateID,
+                 Semester = x.Semester,
+                 StartDate = x.StartDate,
+                 EndDate = x.EndDate,
+                 MaxStudents = x.MaxStudents
+             }).SingleOrDefault();
+
+             return courseToReturn;
          }
  
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="course"></param>
+       /// <returns></returns>
        public Courses CreateCourse(AddCourse course) 
        {
            var newCourse = new Entities.Courses {
@@ -265,6 +283,12 @@ namespace Assignment3.API.Services
             return student;
         }
 
+        /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="id"></param>
+         /// <param name="student"></param>
+         /// <returns></returns>
          public StudentSSN AddToWaitingList(int id,StudentSSN student)
         {
              var course = GetCourseByID(id);
@@ -310,7 +334,14 @@ namespace Assignment3.API.Services
             return student;
 
         }
+        
         //Virkar ekki
+          /// <summary>
+          /// 
+          /// </summary>
+          /// <param name="id"></param>
+          /// <param name="SSN"></param>
+          /// <returns></returns>
           public StudentSSN DeleteStudent(int id, long SSN){
 
               var course = GetCourseByID(id);
@@ -356,6 +387,12 @@ namespace Assignment3.API.Services
 
               return studentdelete;
           }
+
+         /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="id"></param>
+         /// <returns></returns>
          public CoursesDTO DeleteCourse(int id){
             var corseToDelete = 
             (from x in _db.Courses

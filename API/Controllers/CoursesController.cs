@@ -108,31 +108,32 @@ namespace Assignment3.API.Controllers {
         [HttpPut]
         [Route("{id:int}")]
          public IActionResult UpdateCourse(int id, [FromBody] CourseUpdate coursedt)
-         {
-           CoursesDTO course = new CoursesDTO();
-           if(ModelState.IsValid)
-           {
-            try
+        {
+    
+            CoursesDTO course = new CoursesDTO();
+            if(ModelState.IsValid)
             {
-                course = _service.UpdateCourse(id,coursedt);  
+                try
+                {
+                    course = _service.UpdateCourse(id,coursedt);  
+                }
+                catch(AppObjectNotFoundException )
+                {
+                    return NotFound();
+                }
+                catch(FailedToSaveToDatabaseException)
+                {
+                        //Virkar ekki
+                        //return InternalServerError(ex);
+                        return BadRequest(); 
+                }
             }
-            catch(AppObjectNotFoundException )
+            else
             {
-                return NotFound();
+                return BadRequest();
             }
-            catch(FailedToSaveToDatabaseException)
-            {
-                    //Virkar ekki
-                    //return InternalServerError(ex);
-                    return BadRequest(); 
-            }
-           }
-           else
-           {
-               return BadRequest();
-           }
-           return NoContent();
-         }
+            return NoContent();
+        }
 
         [HttpPost]
        // [Route("api/courses"),Name="AddCourse")]
