@@ -121,9 +121,8 @@ namespace Assignment3.API.Controllers {
                 }
                 catch(FailedToSaveToDatabaseException)
                 {
-                        //Virkar ekki
-                        //return InternalServerError(ex);
-                        return BadRequest(); 
+                        //ATH BadRequest ?
+                    return StatusCode(500);
                 }
             }
             else
@@ -134,7 +133,6 @@ namespace Assignment3.API.Controllers {
         }
 
         [HttpPost]
-       // [Route("api/courses"),Name="AddCourse")]
         public IActionResult CreateCourse([FromBody] AddCourse courses) 
         {
            Courses course = new Courses(); 
@@ -147,7 +145,6 @@ namespace Assignment3.API.Controllers {
            {
                return BadRequest();
            }
-           //Skilar location rett, en get ekki nad i course
            var location = Url.Link("GetCourseByID", new { id =  course.ID });  
            return Created(location,course);
         }
@@ -183,9 +180,8 @@ namespace Assignment3.API.Controllers {
 
                 catch (FailedToSaveToDatabaseException )
                 {
-                    //Virkar ekki
-                    //return InternalServerError(ex);
-                    return BadRequest();
+                    //ATH BadRequest ?
+                    return StatusCode(500);
                 }
                 catch (StudentNonExistException )
                 {
@@ -236,8 +232,6 @@ namespace Assignment3.API.Controllers {
             {
                 return BadRequest();
             }
-            //ætti ekki að þurfa nýtt id fyrst við erum alltaf með sama?
-           // var location = Url.Link("AddToWaitingList", new {id = id});
             return Ok();
         }
 
@@ -261,9 +255,8 @@ namespace Assignment3.API.Controllers {
             }
             catch(FailedToSaveToDatabaseException )
             {
-                //Virkar ekki
-                //return InternalServerError(ex);
-                return BadRequest();
+                //ATH BadRequest ?
+                return StatusCode(500);
             }
             return NoContent();
         }
@@ -289,9 +282,8 @@ namespace Assignment3.API.Controllers {
             }
             catch(FailedToSaveToDatabaseException )
             {
-                //Virkar ekki
-                //return InternalServerError(ex);
-                return BadRequest();
+                //ATH BadRequest ?
+                return StatusCode(500);
             }
             return NoContent();
         }

@@ -219,44 +219,65 @@ namespace Assignment3.API.Services
            {
                //Course is full
                //add to waitinglist
-               AddToWaitingList(id, student);
+               //AddToWaitingList(id, student);
                throw new MaxNumberOfStudentsException();
            }
            
-            var isStudentInCourse = listofStudents.Exists(x =>  x.SSN == student.SSN);
-            if(isStudentInCourse)
-             {
-                 throw new StudentIsInCourseException();
-             }
-
-             var studentExists = (from x in _db.Students
-             where student.SSN == x.SSN
-             select new StudentSSN{
+            var studentExists = (from x in _db.Students
+            where student.SSN == x.SSN
+            select new StudentSSN{
                    SSN = x.SSN
-             }).SingleOrDefault();
+            }).SingleOrDefault();
 
-             if(studentExists == null)
-             {
-                 throw new StudentNonExistException();
-              }   
+            if(studentExists == null)
+            {
+                throw new StudentNonExistException();
+            }   
 
-            var student2 = (from x in _db.StudentsInCourses
+            //var isStudentInCourse = listofStudents.Exists(x =>  x.SSN == student.SSN);
+
+            var isStudentInCourse = (from x in _db.StudentsInCourses
               where x.SSN == student.SSN
+              where x.CourseID == id
               select x).SingleOrDefault();
 
-            if(student2 == null)
-            {
-                var studentInCourse = new Entities.StudentsInCourse {
+            if(isStudentInCourse != null)
+             {
+                 if(isStudentInCourse.Active == 0)
+                 {
+                     isStudentInCourse.Active = 1;
+                 }
+                 else{
+                    throw new StudentIsInCourseException();
+                 }
+             }
+             else{
+                 var studentInCourse = new Entities.StudentsInCourse {
                     CourseID = id,
                     SSN = student.SSN,
                     Active = 1
                 };
                 _db.StudentsInCourses.Add(studentInCourse);
-            }
-            else
-            {
-              student2.Active = 1;
-            }
+             }
+
+            // var student2 = (from x in _db.StudentsInCourses
+            //   where x.SSN == student.SSN
+            //   where x.CourseID == id
+            //   select x).SingleOrDefault();
+
+            // if(student2 == null)
+            // {
+            //     var studentInCourse = new Entities.StudentsInCourse {
+            //         CourseID = id,
+            //         SSN = student.SSN,
+            //         Active = 1
+            //     };
+            //     _db.StudentsInCourses.Add(studentInCourse);
+            // }
+            // else
+            // {
+            //   student2.Active = 1;
+            // }
 
                 var studentonwaitinglist = (from x in _db.WaitingList
                 where x.SSN == student.SSN
@@ -270,6 +291,7 @@ namespace Assignment3.API.Services
                     CourseID = id,
                     SSN = student.SSN
                 };
+               _db.WaitingList.Remove(deleteofwaitinglist);
             }
 
             try {
@@ -362,25 +384,25 @@ namespace Assignment3.API.Services
 
               student2.Active = 0;
 
-              var someoneOnWaitingList = (from x in _db.WaitingList
-              where x.CourseID == id
-              orderby x.Number ascending
-              select x).FirstOrDefault();
+        //   var someoneOnWaitingList = (from x in _db.WaitingList
+        //   where x.CourseID == id
+        //   orderby x.Number ascending
+        //   select x).FirstOrDefault();
 
-              if(someoneOnWaitingList != null)
-              {
-                 var addStudent = new Entities.StudentsInCourse {
-                    CourseID = id,
-                    SSN = someoneOnWaitingList.SSN,
-                    Active = 1
-                };
+        //   if(someoneOnWaitingList != null)
+        //   {
+        //      var addStudent = new Entities.StudentsInCourse {
+        //         CourseID = id,
+        //         SSN = someoneOnWaitingList.SSN,
+        //         Active = 1
+        //     };
 
-                //Remove from the waitinglist
-                _db.WaitingList.Remove(someoneOnWaitingList);
+        //     //Remove from the waitinglist
+        //     _db.WaitingList.Remove(someoneOnWaitingList);
 
-                //Add the student from waiting list to the course
-                _db.StudentsInCourses.Add(addStudent);
-              }
+        //     //Add the student from waiting list to the course
+        //     _db.StudentsInCourses.Add(addStudent);
+        //   }
               try {
                 _db.SaveChanges();
               } 

@@ -22,13 +22,14 @@ namespace Assignment3.API.Models
         /// The start date of the Course
         /// </summary>
         /// <returns></returns>
-        public string StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         /// <summary>
         /// The end date of the course
         /// </summary>
         /// <returns></returns>
-        public string EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        
        /// <summary>
        /// Example "20151" -> spring 2015, 
        /// "20152" -> summer 2015,

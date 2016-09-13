@@ -36,12 +36,12 @@ namespace Assignment3.API.Models
         /// <summary>
         /// The start date of the course
         /// </summary>
-        public string StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
  
         /// <summary>
         /// The End date of the course
         /// </summary>
-        public string EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         /// <summary>
         /// List of Student in this course 
