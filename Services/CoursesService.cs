@@ -8,9 +8,6 @@ namespace Assignment3.API.Services
 {
     public class CoursesService : ICoursesService
     {
-        //ORDER: GET, PUT, POST, DELETE
-
-        //Console.WriteLine("Course SErvice");
         private readonly AppDataContext _db;
         public CoursesService(AppDataContext db){
             _db = db;
@@ -24,7 +21,7 @@ namespace Assignment3.API.Services
         /// "20152" -> summer 2015,
         /// "20153" -> fall 2015).
         /// </param>
-        /// <returns>List<CourseDTOLite></returns>
+        /// <returns>List of courses<CourseDTOLite></returns>
         public List<CourseDTOLite> GetCoursesBySemester(string semester ){
             
          Console.WriteLine("GetCoursesBySemester");
@@ -53,11 +50,12 @@ namespace Assignment3.API.Services
         /// Returns a detailed information about a couse 
         /// </summary>
         /// <param name="ID">The id of the couse we want to get information about</param>
-        /// <returns>Returns CourseDetailed</returns>
+        /// <returns>Returns CourseDetailed  if the course excists in the database 
+        /// else it returns AppObjectNotFoundException()
+        ///</returns>
        public CourseDetailed GetCourseByID(int id){  
-         Console.WriteLine("GetCourseByID");
 
-             var listOfStudents2 = (from x in _db.StudentsInCourses
+            var listOfStudents2 = (from x in _db.StudentsInCourses
             join ct in _db.Students on x.SSN equals ct.SSN 
             where x.CourseID == id
             where x.Active == 1
@@ -81,7 +79,6 @@ namespace Assignment3.API.Services
 
               if(course == null)
               {
-                      Console.WriteLine("GETCOURSE EXCEPTION");
                   throw new AppObjectNotFoundException();
               }
               return course;
@@ -91,13 +88,11 @@ namespace Assignment3.API.Services
         /// Function that returns a list of all students in a spesific course
         /// </summary>
         /// <param name="id">The id of the couse</param>
-        /// <returns>List<StudentDTO></returns>
+        /// <returns>List of students<StudentDTO></returns>
         public List<StudentDTO> GetListOfStudentsByCourseId(int id){
-             Console.WriteLine("GetListOfStudentsByCourseId");
             //Only list active users not that have been deleted(SaveChanges)
 
             var course = GetCourseByID(id);
-            //Erum að skila tomum lista ef thad er enginn skradur getum breytt
             var listOfStudents = (from x in _db.StudentsInCourses
             join ct in _db.Students on x.SSN equals ct.SSN 
             where x.CourseID == id
@@ -110,10 +105,10 @@ namespace Assignment3.API.Services
          }
 
         /// <summary>
-        /// 
+        /// Function that returns a waiting list for students that want to join a course
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The id of the course </param>
+        /// <returns>List of students that are on the waitinglist</returns>
         public List<StudentDTO> GetWaitingList(int id)
         {
             var course = GetCourseByID(id);
@@ -127,15 +122,15 @@ namespace Assignment3.API.Services
 
             return listOfStudentsInWaitingList;
         }
+
          /// <summary>
-         /// Allows us to update the startdate and endate of course
+         /// Allows us to update the startdate and endate and the maxStudents value of the course. 
          /// </summary>
          /// <param name="id">The id of the course we want to update</param>
-         /// <param name="coursedt">instance of CourseUpdate that we can get startdate and enddate from</param>
-         /// <returns>boolean value if we could not update couse</returns>
+         /// <param name="coursedt">instance of CourseUpdate that we can get startdate, enddate and MaxStudents</param>
+         /// <returns>The course we created or FailedToSaveToDatabaseException() if we can't save to the database</returns>
          public CoursesDTO UpdateCourse(int id,CourseUpdate coursedt)
          {
-
              var courseToUpdate = (from x in _db.Courses
              where x.ID == id
              select x).SingleOrDefault();
@@ -175,10 +170,11 @@ namespace Assignment3.API.Services
          }
  
        /// <summary>
-       /// 
+       /// Creates a new course
        /// </summary>
-       /// <param name="course"></param>
-       /// <returns></returns>
+       /// <param name="course">Instance of AddCourse that keeps the courses value</param>
+       /// <returns>Returns the new course if we can save changes to database, else we throw
+       /// FailedToSaveToDatabaseException()
        public Courses CreateCourse(AddCourse course) 
        {
            var newCourse = new Entities.Courses {
@@ -206,7 +202,11 @@ namespace Assignment3.API.Services
         /// </summary>
         /// <param name="id">The id of the couse we are going to add in</param>
         /// <param name="student">The Student of type StudentSSN containing the students SSN </param>
-        /// <returns>boolean value if we can not add the student to the couse</returns>
+        /// <returns>If maximum number of students has reached we throw MaxNumberOfStudentsException().
+        /// If the student does not exsist in the database we throw StudentNonExistException().
+        /// If it fails to save to database we return FailedToSaveToDatabaseException().
+        /// If nothing fails we return the student that was created. 
+        /// ///</returns>
         public StudentSSN AddStudentToCourse(int id, StudentSSN student){
             
             Console.WriteLine("AddStudentToCourse");
@@ -217,9 +217,6 @@ namespace Assignment3.API.Services
 
            if(numberOfStudents == course.MaxStudents )
            {
-               //Course is full
-               //add to waitinglist
-               //AddToWaitingList(id, student);
                throw new MaxNumberOfStudentsException();
            }
            
@@ -234,64 +231,39 @@ namespace Assignment3.API.Services
                 throw new StudentNonExistException();
             }   
 
-            //var isStudentInCourse = listofStudents.Exists(x =>  x.SSN == student.SSN);
-
             var isStudentInCourse = (from x in _db.StudentsInCourses
               where x.SSN == student.SSN
               where x.CourseID == id
               select x).SingleOrDefault();
 
-            if(isStudentInCourse != null)
-             {
-                 if(isStudentInCourse.Active == 0)
-                 {
-                     isStudentInCourse.Active = 1;
-                 }
-                 else{
-                    throw new StudentIsInCourseException();
-                 }
-             }
-             else{
-                 var studentInCourse = new Entities.StudentsInCourse {
+            if(isStudentInCourse == null)
+            {
+                var studentInCourse = new Entities.StudentsInCourse {
                     CourseID = id,
                     SSN = student.SSN,
                     Active = 1
                 };
                 _db.StudentsInCourses.Add(studentInCourse);
-             }
+            }
+            else
+            {
+                if(isStudentInCourse.Active == 1)
+                {
+                    throw new StudentIsInCourseException();
+                }
+                else{
+                    isStudentInCourse.Active = 1;
+                }
+            }
 
-            // var student2 = (from x in _db.StudentsInCourses
-            //   where x.SSN == student.SSN
-            //   where x.CourseID == id
-            //   select x).SingleOrDefault();
-
-            // if(student2 == null)
-            // {
-            //     var studentInCourse = new Entities.StudentsInCourse {
-            //         CourseID = id,
-            //         SSN = student.SSN,
-            //         Active = 1
-            //     };
-            //     _db.StudentsInCourses.Add(studentInCourse);
-            // }
-            // else
-            // {
-            //   student2.Active = 1;
-            // }
-
-                var studentonwaitinglist = (from x in _db.WaitingList
-                where x.SSN == student.SSN
-                where x.CourseID == id
-                select x).SingleOrDefault();
+            var studentonwaitinglist = (from x in _db.WaitingList
+            where x.SSN == student.SSN
+            where x.CourseID == id
+            select x).SingleOrDefault();
 
             if(studentonwaitinglist != null)
             {
-                var deleteofwaitinglist = new Entities.WaitingList
-                {
-                    CourseID = id,
-                    SSN = student.SSN
-                };
-               _db.WaitingList.Remove(deleteofwaitinglist);
+               _db.WaitingList.Remove(studentonwaitinglist);
             }
 
             try {
@@ -304,12 +276,17 @@ namespace Assignment3.API.Services
             return student;
         }
 
-        /// <summary>
-         /// 
+         /// <summary>
+         /// Should add a student to the waiting list of a spesific course
          /// </summary>
-         /// <param name="id"></param>
-         /// <param name="student"></param>
-         /// <returns></returns>
+         /// <param name="id">The id of the Course</param>
+         /// <param name="student">The student we are adding to the waiting list</param>
+         /// <returns> If the student does not exist int the database we throw StudentNonExistException().
+         /// If the student is alredy on the waiting list we throw StudentOnWaitingListException().
+         /// If the student is alredy in the course that the waiting list is for we throw StudentIsInCourseException(). 
+         /// If it fails to save to database we throw FailedToSaveToDatabaseException().
+         /// Else we return the student that we added to the waiting list.
+         /// </returns>
          public StudentSSN AddToWaitingList(int id,StudentSSN student)
         {
              var course = GetCourseByID(id);
@@ -326,11 +303,9 @@ namespace Assignment3.API.Services
 
              if(studentExists == null)
              {
-                 Console.WriteLine("Student exception");
                  throw new StudentNonExistException();
             }   
             List<StudentDTO> students = GetWaitingList(id);
-            //skilar boolean
             var studentinlist = students.Exists(x => x.SSN == student.SSN);
 
             if(studentinlist)
@@ -351,18 +326,15 @@ namespace Assignment3.API.Services
                 Console.WriteLine(e);
                 throw new FailedToSaveToDatabaseException();
             }
-
             return student;
-
         }
         
-        //Virkar ekki
           /// <summary>
-          /// 
+          /// Deleats a student from a course. 
           /// </summary>
-          /// <param name="id"></param>
-          /// <param name="SSN"></param>
-          /// <returns></returns>
+          /// <param name="id">Id of the course</param>
+          /// <param name="SSN">The social security number of the student</param>
+          /// <returns>The student deleted SSN if we are able to save to database else FailedToSaveToDatabaseException().</returns>
           public StudentSSN DeleteStudent(int id, long SSN){
 
               var course = GetCourseByID(id);
@@ -384,25 +356,6 @@ namespace Assignment3.API.Services
 
               student2.Active = 0;
 
-        //   var someoneOnWaitingList = (from x in _db.WaitingList
-        //   where x.CourseID == id
-        //   orderby x.Number ascending
-        //   select x).FirstOrDefault();
-
-        //   if(someoneOnWaitingList != null)
-        //   {
-        //      var addStudent = new Entities.StudentsInCourse {
-        //         CourseID = id,
-        //         SSN = someoneOnWaitingList.SSN,
-        //         Active = 1
-        //     };
-
-        //     //Remove from the waitinglist
-        //     _db.WaitingList.Remove(someoneOnWaitingList);
-
-        //     //Add the student from waiting list to the course
-        //     _db.StudentsInCourses.Add(addStudent);
-        //   }
               try {
                 _db.SaveChanges();
               } 
@@ -414,10 +367,11 @@ namespace Assignment3.API.Services
           }
 
          /// <summary>
-         /// 
+         /// Deleats a course
          /// </summary>
-         /// <param name="id"></param>
-         /// <returns></returns>
+         /// <param name="id">The id of the course to delete </param>
+         /// <returns>The deleted course if the course is found else it returns AppObjectNotFoundException()</returns>
+         /// or an FailedToSaveToDatabaseException() if we could not save to the database
          public CoursesDTO DeleteCourse(int id){
             var corseToDelete = 
             (from x in _db.Courses

@@ -24,7 +24,7 @@ namespace Assignment3.API.Controllers {
          /// <param name="semester"> 
          /// example: "20151" -> spring 2015, "20152" -> summer 2015, "20153" -> fall 2015
          /// </param>
-         /// <returns>List of courses on that semester</returns>
+         /// <returns>Ok and list of courses on that semester</returns>
          [HttpGet]
          public IActionResult GetCoursesOnSemester(string semester)
          {
@@ -35,7 +35,7 @@ namespace Assignment3.API.Controllers {
         /// The funtion returns information about one course with spesific id
         /// </summary>
         /// <param name="id">The parameter of the couse we want to return</param>
-        /// <returns>Returns detailed course object</returns>
+        /// <returns>404 if the course is not found. Ok and the course if the course if the course is found.</returns>
         [HttpGet]
         [Route("{id:int}",Name="GetCourseByID")]
          public IActionResult GetCourseByID(int id){
@@ -57,7 +57,7 @@ namespace Assignment3.API.Controllers {
          /// </summary>
          /// <param name=""{id:int}/students"">the id of the cours we want to get student list from</param>
          /// <param name="id"></param>
-         /// <returns>List of students in a course</returns>
+         /// <returns>Ok with List of students in a course if we are able to get the list. 404 if we do not find the course. </returns>
          [HttpGet]
          [Route("{id:int}/students", Name="GetStudents")]
          public IActionResult GetListOfStudentsByCourseId(int id) {
@@ -77,9 +77,8 @@ namespace Assignment3.API.Controllers {
         /// <summary>
         /// Waiting list for courses
         /// </summary>
-        /// <param name=""{id:int}/waitinglist""></param>
         /// <param name="id">The id of the course that we want to get the waiting list for</param>
-        /// <returns></returns>
+        /// <returns>Returns 404 if the course is not found. Ok if we are able to add the student to the waiting list </returns>
         [HttpGet]
         [Route("{id:int}/waitinglist", Name="GetWaitingList")]
         public IActionResult GetWaitingList(int id) {
@@ -90,7 +89,7 @@ namespace Assignment3.API.Controllers {
             }
             catch (AppObjectNotFoundException)
             {
-            return NotFound();
+                return NotFound();
             }
             return Ok(students);
          }
@@ -102,7 +101,9 @@ namespace Assignment3.API.Controllers {
         /// </summary>
         /// <param name="id">The id of the course we want to update</param>
         /// <param name="coursedt">The course updated information we take in from the body</param>
-        /// <returns></returns>
+        /// <returns>BadRequest if the model state is not valid. We return 404 if the course does not exist 
+         /// in the database. We return 500 if we are not able to save to database and no content when we are able to update the course. 
+         /// </returns>
         [HttpPut]
         [Route("{id:int}")]
          public IActionResult UpdateCourse(int id, [FromBody] CourseUpdate coursedt)
@@ -121,7 +122,6 @@ namespace Assignment3.API.Controllers {
                 }
                 catch(FailedToSaveToDatabaseException)
                 {
-                        //ATH BadRequest ?
                     return StatusCode(500);
                 }
             }
@@ -132,6 +132,11 @@ namespace Assignment3.API.Controllers {
             return NoContent();
         }
 
+        /// <summary>
+        /// Creates a course
+        /// </summary>
+        /// <param name="courses">Informations needed to add course retrived from the Body</param>
+        /// <returns>Bad request if the model state is not valid. Id and location header and 201 if we could create the course</returns>
         [HttpPost]
         public IActionResult CreateCourse([FromBody] AddCourse courses) 
         {
@@ -154,10 +159,12 @@ namespace Assignment3.API.Controllers {
         /// </summary>
         /// <param name="id">The id of the course</param>
         /// <param name="Student">The model object StudentSSN wich contains the SSN of the student</param>
-        /// <returns>Returns bad request if we could not add the studetn <summary>
-        /// or ok(); if we could add the student
+        /// <returns>If the model state is not valid we return bad request <summary>
+        /// If the course or student does not exist we return 404. If it fails to save to database we return 500.
+        /// If the maximum number of students in course is reched we return 412. If the student is alredy in the 
+        /// course we return 412. If we are able to add to the waitingList we return Ok().
         /// </summary>
-         [HttpPost]
+        [HttpPost]
         [Route("{id:int}/students", Name="AddStudentToCourse")]
         public IActionResult AddStudentToCourse(int id,[FromBody] StudentSSN Student) 
         {
@@ -177,10 +184,8 @@ namespace Assignment3.API.Controllers {
                 {
                     return StatusCode(412);
                 }
-
                 catch (FailedToSaveToDatabaseException )
                 {
-                    //ATH BadRequest ?
                     return StatusCode(500);
                 }
                 catch (StudentNonExistException )
@@ -200,6 +205,15 @@ namespace Assignment3.API.Controllers {
             var location = Url.Link("AddStudentToCourse", new { id = id });  
             return Created(location,Student);
        }
+
+        /// <summary>
+        /// Adds a student to a waiting list for spesific course
+        /// </summary>
+        /// <param name="id">The id of the course </param>
+        /// <param name="Student">The SSN of the student we are adding to the waiting list</param>
+        /// <returns>If the course or student does not exist we return 404. If the student is alredy in 
+        /// the course or on the waiting list we return 412. If the model state is not valid we return bad request
+        /// If we are able to add to the waitingList we return Ok()</returns>
         [HttpPost]
         [Route("{id:int}/waitinglist", Name="AddToWaitingList")]
         public IActionResult AddToWaitingList(int id,[FromBody] StudentSSN Student) 
@@ -236,11 +250,13 @@ namespace Assignment3.API.Controllers {
         }
 
         /// <summary>
-        /// 
+        /// Th
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="SSN"></param>
-        /// <returns></returns>
+        /// <param name="SSN">The social security number of the student to delete</param>
+        /// <returns>Nocontent if we succesfully deleted the student, 404 if we could not find the course to
+        /// delete from. If it fails to save to database we return 500
+        ///</returns>
         [HttpDelete]
         [Route("{id:int}/students/{ssn:long}")]
         public IActionResult DeleteCourse(int id, long SSN) {
@@ -255,7 +271,6 @@ namespace Assignment3.API.Controllers {
             }
             catch(FailedToSaveToDatabaseException )
             {
-                //ATH BadRequest ?
                 return StatusCode(500);
             }
             return NoContent();
@@ -266,7 +281,7 @@ namespace Assignment3.API.Controllers {
         /// </summary>
         /// <param name="id">The id of the course we want to remove</param>
         /// <returns>Returns no content if the course was succesfully deleted 
-        /// and 404 if the course was not found in the db
+        /// and 404 if the course was not found in the db. If it fails to save to database we return 500
         /// </returns>
         [HttpDelete]
         [Route("{id:int}")]
@@ -282,7 +297,6 @@ namespace Assignment3.API.Controllers {
             }
             catch(FailedToSaveToDatabaseException )
             {
-                //ATH BadRequest ?
                 return StatusCode(500);
             }
             return NoContent();

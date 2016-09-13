@@ -10,7 +10,6 @@ namespace Assignment3.API.Services.Entities
         /// <summary>
         /// Database generated number for the student in the WaitingList
         /// </summary>
-        /// <returns></returns>
         [Key]
         public int Number { get; set; }
 
@@ -22,7 +21,6 @@ namespace Assignment3.API.Services.Entities
         /// <summary>
         /// The Students social seciurity number 
         /// </summary>
-        /// <returns></returns>
         public long SSN { get; set; }
 
     }
